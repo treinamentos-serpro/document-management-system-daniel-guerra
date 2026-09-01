@@ -24,9 +24,9 @@ function fileFilter(_req, file, cb) {
   if (ALLOWED_MIME_TYPES.has(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(Object.assign(new multer.MulterError('LIMIT_UNEXPECTED_FILE'), {
-      message: 'Tipo de arquivo não permitido',
-    }));
+    const error = new multer.MulterError('LIMIT_UNEXPECTED_FILE');
+    error.message = 'Tipo de arquivo não permitido';
+    cb(error, false);
   }
 }
 
