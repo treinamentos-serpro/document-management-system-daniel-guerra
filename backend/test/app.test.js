@@ -28,7 +28,7 @@ test('POST /upload sem arquivo retorna 400', async () => {
 test('POST /upload, GET /documents e GET /documents/:id/download funcionam de ponta a ponta', async () => {
   await withServer(async (baseUrl) => {
     const formData = new FormData();
-    formData.append('file', new Blob(['conteúdo de teste']), 'teste.txt');
+    formData.append('file', new Blob(['conteúdo de teste'], { type: 'text/plain' }), 'teste.txt');
     formData.append('owner', 'daniel');
 
     const uploadResponse = await fetch(`${baseUrl}/upload`, {

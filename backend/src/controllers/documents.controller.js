@@ -1,8 +1,6 @@
 // Controllers: tratam entrada/saída HTTP e validação básica dos endpoints de documentos.
-const path = require('path');
 const service = require('../services/documents.service');
-
-const STORAGE_DIR = path.join(__dirname, '..', '..', 'storage');
+const { STORAGE_DIR } = require('../config');
 
 function upload(req, res) {
   if (!req.file) {
@@ -25,7 +23,11 @@ function download(req, res) {
     return res.status(404).json({ error: 'Documento não encontrado' });
   }
 
-  return res.download(info.filePath, info.document.originalName);
+  return res.download(info.filePath, info.document.originalName, (err) => {
+    if (err && !res.headersSent) {
+      res.status(500).json({ error: 'Falha ao transferir o arquivo' });
+    }
+  });
 }
 
 module.exports = {
