@@ -1,23 +1,9 @@
-import { useEffect, useState } from 'react';
 import UploadComponent from './components/UploadComponent';
 import DocumentList from './components/DocumentList';
-import { listDocuments } from './services/documentsService';
+import { useDocuments } from './hooks/useDocuments';
 
 export default function App() {
-  const [documents, setDocuments] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    listDocuments()
-      .then(setDocuments)
-      .catch((listError) => setError(listError.message))
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  function handleUploaded(document) {
-    setDocuments((current) => [...current, document]);
-  }
+  const { documents, error, isLoading, addDocument } = useDocuments();
 
   return (
     <main className="min-h-screen px-4 py-6 text-stone-950 sm:px-6 lg:px-8">
@@ -53,7 +39,7 @@ export default function App() {
         </header>
 
         <section className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.45fr)] lg:items-start">
-          <UploadComponent onUploaded={handleUploaded} />
+          <UploadComponent onUploaded={addDocument} />
 
           <div className="rounded-lg border border-stone-200/80 bg-white shadow-sm">
             <div className="flex flex-col gap-2 border-b border-stone-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">

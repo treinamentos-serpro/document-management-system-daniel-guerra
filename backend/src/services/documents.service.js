@@ -28,7 +28,14 @@ function getDownloadInfo(id, storageDir) {
     return null;
   }
 
-  const filePath = path.join(storageDir, document.storedFileName);
+  const resolvedStorage = path.resolve(storageDir);
+  const filePath = path.resolve(resolvedStorage, document.storedFileName);
+
+  // Impede path traversal: o arquivo deve estar dentro do diretório de storage.
+  if (!filePath.startsWith(resolvedStorage + path.sep)) {
+    return null;
+  }
+
   if (!fs.existsSync(filePath)) {
     return null;
   }

@@ -26,12 +26,13 @@ export async function listDocuments(owner) {
   const response = await fetch(`${API_BASE}/documents${query}`);
 
   if (!response.ok) {
-    throw new Error('Falha ao listar os documentos');
+    const body = await response.json().catch(() => ({}));
+    throw new Error(body.error || 'Falha ao listar os documentos');
   }
 
   return response.json();
 }
 
 export function getDownloadUrl(id) {
-  return `${API_BASE}/documents/${id}/download`;
+  return `${API_BASE}/documents/${encodeURIComponent(id)}/download`;
 }
